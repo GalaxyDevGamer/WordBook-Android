@@ -1,0 +1,66 @@
+{
+  "project_info": {
+    "project_number": "965338215049",
+    "firebase_url": "https://wordbook-774c2.firebaseio.com",
+    "project_id": "wordbook-774c2",
+    "storage_bucket": "wordbook-774c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965338215049:android:99d13edbf0d4a6ec",
+        "android_client_info": {
+          "package_name": "galaxysoftware.wordbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965338215049-uru8qgtud8qqug7ap41ad9bd6omdbeoo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "galaxysoftware.wordbook",
+            "certificate_hash": "7b49e6cb1e94106544757e7b71857512719b3ee1"
+          }
+        },
+        {
+          "client_id": "965338215049-9qj2qlai0uegsk2mku83349ap4fh5fvp.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "965338215049-9qj2qlai0uegsk2mku83349ap4fh5fvp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAr1vQ-r6_rAa0_fU7alWaLFcW21nRveo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965338215049-9qj2qlai0uegsk2mku83349ap4fh5fvp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "965338215049-v8qb314k2veq6ivs4j7gci5p3k7hk9dm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "GalaxySoftware.WordBook.Swift"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
