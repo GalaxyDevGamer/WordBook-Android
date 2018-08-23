@@ -30,7 +30,6 @@ class EditorFragment : BaseFragment() {
             schoolField.setText(data.schoolLevel)
             descriptionFiled.setText(data.note)
         }
-        setHasOptionsMenu(true)
     }
 
     override fun getLayoutId() = R.layout.fragment_editer
@@ -39,10 +38,6 @@ class EditorFragment : BaseFragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateToolbar(NavigationType.BACK, word, R.menu.editer)
-    }
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         val db = FirebaseFirestore.getInstance()
         val data = HashMap<String, Any>()
@@ -74,11 +69,10 @@ class EditorFragment : BaseFragment() {
         private const val BUNDLE_KEY_OBJECT = "bundle_key_object"
 
         @JvmStatic
-        fun newInstance(any: Any) =
-                EditorFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(BUNDLE_KEY_OBJECT, any as String)
-                    }
-                }
+        fun newInstance(any: Any) = EditorFragment().apply {
+            arguments = Bundle().apply {
+                putString(BUNDLE_KEY_OBJECT, any as String)
+            }
+        }
     }
 }

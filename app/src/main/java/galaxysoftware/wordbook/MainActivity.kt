@@ -17,16 +17,11 @@ import galaxysoftware.wordbook.type.TabType
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), ChangeFragmentListener {
-    private var homeFragmentHistory: MutableList<BaseFragment> = ArrayList()
-    private var searchFragmentHistory: MutableList<BaseFragment> = ArrayList()
-
-    private val homeFragment = HomeFragment.newInstance()
-    private val searchFragment = SearchFragment.newInstance()
     private var currentTabType = TabType.HOME
 
-    private val navData = HashMap<TabType, NavigationType>()
-    private val titleData = HashMap<TabType, String>()
-    private val menuData = HashMap<TabType, Int>()
+    private val fragmentTypeHistory = HashMap<TabType, ArrayList<FragmentType>>()
+    private val dataContainer = HashMap<FragmentType, Any>()
+    private val tabHistory = HashMap<TabType, ArrayList<BaseFragment>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,20 +47,51 @@ class MainActivity : AppCompatActivity(), ChangeFragmentListener {
     }
 
     private fun initVariable() {
-        homeFragmentHistory.add(homeFragment)
-        searchFragmentHistory.add(searchFragment)
-        menuData[TabType.HOME] = R.menu.home
-        menuData[TabType.SEARCH] = R.menu.search
+        tabHistory[TabType.HOME] = ArrayList()
+        tabHistory[TabType.SEARCH] = ArrayList()
+        tabHistory[TabType.HOME]?.add(HomeFragment.newInstance())
+        tabHistory[TabType.SEARCH]?.add(SearchFragment.newInstance())
+        fragmentTypeHistory[TabType.HOME] = ArrayList()
+        fragmentTypeHistory[TabType.SEARCH] = ArrayList()
+        fragmentTypeHistory[TabType.HOME]?.add(FragmentType.HOME_TAB)
+        fragmentTypeHistory[TabType.SEARCH]?.add(FragmentType.SEARCH_TAB)
+        setTabData(FragmentType.HOME_TAB, NavigationType.NONE, getString(R.string.home), R.menu.home)
+        setTabData(FragmentType.SEARCH_TAB, NavigationType.NONE, getString(R.string.search), R.menu.search)
+    }
+
+    /**
+     * Set the data for each tab.
+     */
+    private fun setTabData(fragmentType: FragmentType, navigationType: NavigationType, title: String, menu: Int) {
+        val data = HashMap<String, Any>()
+        data["nav"] = navigationType
+        data["title"] = title
+        data["menu"] = menu
+        dataContainer[fragmentType] = data
     }
 
     private fun changeFirstFragment() {
-        fragmentTransaction(homeFragment)
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.homeTabContainer, tabHistory[TabType.HOME]!![0])
+            replace(R.id.searchTabContainer, tabHistory[TabType.SEARCH]!![0])
+            commit()
+        }
+        changeTab(TabType.HOME)
+    }
+
+    private fun changeTab(tabType: TabType) {
+        currentTabType = tabType
+        updateToolbar()
+        homeTabContainer.visibility = if (currentTabType == TabType.HOME) View.VISIBLE else View.INVISIBLE
+        searchTabContainer.visibility = if (currentTabType == TabType.SEARCH) View.VISIBLE else View.INVISIBLE
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
-        menuInflater.inflate(menuData[currentTabType]!!, menu)
-        if (getCurrentFragment() == searchFragment) {
+        val data = dataContainer[fragmentTypeHistory[currentTabType]!![fragmentTypeHistory[currentTabType]!!.size - 1]] as HashMap<String, Any>
+        menuInflater.inflate(data["menu"] as Int, menu)
+        if (fragmentTypeHistory[currentTabType]!![fragmentTypeHistory[currentTabType]!!.size - 1] == FragmentType.SEARCH_TAB) {
+            val searchFragment = tabHistory[TabType.SEARCH]!![tabHistory[TabType.SEARCH]!!.size-1] as SearchFragment
             val searchBar = menu?.findItem(R.id.search)?.actionView as SearchView
             searchBar.setIconifiedByDefault(false)
             searchBar.clearFocus()
@@ -87,60 +113,46 @@ class MainActivity : AppCompatActivity(), ChangeFragmentListener {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onChangeFragment(fragmentType: FragmentType, any: Any) {
-        changeFragment(fragmentType, any)
-    }
+    override fun onChangeFragment(fragmentType: FragmentType, any: Any) = changeFragment(fragmentType, any)
 
     private fun changeFragment(fragmentType: FragmentType, any: Any) {
+        if (fragmentType == FragmentType.EDIT)
+            bottom_navigation.visibility = View.GONE
         val fragment = FragmentMakeHelper.makeFragment(fragmentType, any)
-        when (currentTabType) {
-            TabType.HOME -> { homeFragmentHistory.add(fragment) }
-            TabType.SEARCH -> { searchFragmentHistory.add(fragment) }
-        }
-        fragmentTransaction(fragment)
-    }
-
-    private fun changeTab(tabType: TabType) {
-        currentTabType = tabType
-        fragmentTransaction(getCurrentFragment())
-        updateToolbar()
-        homeTabContainer.visibility = if (currentTabType == TabType.HOME) View.VISIBLE else View.INVISIBLE
-        searchTabContainer.visibility = if (currentTabType == TabType.SEARCH) View.VISIBLE else View.INVISIBLE
+        tabHistory[currentTabType]?.add(fragment)
+        replaceFragment(fragment)
         invalidateOptionsMenu()
     }
 
-    private fun fragmentTransaction(fragment: BaseFragment) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        when (currentTabType) {
-            TabType.HOME -> fragmentTransaction.replace(R.id.homeTabContainer, fragment)
-            TabType.SEARCH -> fragmentTransaction.replace(R.id.searchTabContainer, fragment)
-        }
-        fragmentTransaction.commit()
-    }
+    private fun getCurrentFragment() = tabHistory[currentTabType]!![tabHistory[currentTabType]!!.size - 1]
 
-    private fun getCurrentFragment(): BaseFragment {
-        return when (currentTabType) {
-            TabType.HOME -> homeFragmentHistory[homeFragmentHistory.size - 1]
-            TabType.SEARCH -> searchFragmentHistory[searchFragmentHistory.size - 1]
+    /**
+     * Replacing Fragment
+     */
+    private fun replaceFragment(fragment: BaseFragment) = supportFragmentManager.beginTransaction().apply {
+        when (currentTabType) {
+            TabType.HOME -> replace(R.id.homeTabContainer, fragment)
+            TabType.SEARCH -> replace(R.id.searchTabContainer, fragment)
         }
+        commit()
     }
 
     fun backFragment() {
-        when (currentTabType) {
-            TabType.HOME -> homeFragmentHistory.removeAt(homeFragmentHistory.size - 1)
-            TabType.SEARCH -> {
-                if (searchFragmentHistory.size > 1)
-                    searchFragmentHistory.removeAt(searchFragmentHistory.size - 1)
-                else
-                    changeTab(TabType.HOME)
-            }
-        }
-        fragmentTransaction(getCurrentFragment())
+        if (fragmentTypeHistory[currentTabType]!![fragmentTypeHistory[currentTabType]!!.size-1] == FragmentType.EDIT)
+            bottom_navigation.visibility = View.VISIBLE
+        tabHistory[currentTabType]!!.removeAt(tabHistory[currentTabType]!!.size - 1)
+        fragmentTypeHistory[currentTabType]!!.removeAt(fragmentTypeHistory[currentTabType]!!.size - 1)
+        replaceFragment(getCurrentFragment())
+        updateToolbar()
     }
 
     override fun onBackPressed() {
-        if (currentTabType == TabType.HOME && homeFragmentHistory[homeFragmentHistory.size - 1] == homeFragment) {
+        if (currentTabType == TabType.HOME && tabHistory[TabType.HOME]!!.size == 1) {
             finish()
+            return
+        }
+        if (tabHistory[currentTabType]!!.size == 1) {
+            changeTab(TabType.HOME)
             return
         }
         bottom_navigation.selectedItemId = when(currentTabType) {
@@ -150,8 +162,17 @@ class MainActivity : AppCompatActivity(), ChangeFragmentListener {
         backFragment()
     }
 
+    /**
+     * Updating Toolbar
+     * Data is Stored on dataContainer
+     *
+     * *Icon: BACK or CLOSE
+     * *Title: Title
+     * invalidateOptionsMenu(): Update Menu
+     */
     private fun updateToolbar() {
-        when (navData[currentTabType]) {
+        val data = dataContainer[fragmentTypeHistory[currentTabType]!![fragmentTypeHistory[currentTabType]!!.size - 1]] as HashMap<String, Any>
+        when (data["nav"]) {
             NavigationType.BACK -> {
                 toolbar.navigationIcon = ContextCompat.getDrawable(this, R.mipmap.baseline_keyboard_arrow_left_black_24)
                 toolbar.setNavigationOnClickListener { backFragment() }
@@ -161,13 +182,21 @@ class MainActivity : AppCompatActivity(), ChangeFragmentListener {
                 toolbar.setNavigationOnClickListener(null)
             }
         }
-        toolbar.title = titleData[currentTabType]
+        toolbar.title = data["title"] as String
+        invalidateOptionsMenu()
     }
 
-    fun setData(navigationType: NavigationType, title: String, menu: Int) {
-        navData[currentTabType] = navigationType
-        titleData[currentTabType] = title
-        menuData[currentTabType] = menu
+    /**
+     * Setting the data when changing Fragment
+     * Data is stored on dataContainer by fragmentType
+     */
+    fun setData(fragmentType: FragmentType, navigationType: NavigationType, title: String, menu: Int) {
+        val data = HashMap<String, Any>()
+        data["nav"] = navigationType
+        data["title"] = title
+        data["menu"] = menu
+        dataContainer[fragmentType] = data
+        this.fragmentTypeHistory[currentTabType]?.add(fragmentType)
         updateToolbar()
     }
 }

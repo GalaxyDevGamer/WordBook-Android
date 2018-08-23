@@ -53,5 +53,8 @@ abstract class BaseFragment : Fragment() {
 
     abstract fun updateFragment()
 
-    fun updateToolbar(navigationType: NavigationType, title: String, menu: Int) = getMainActivity().setData(navigationType, title, menu)
+    /**
+     * Used for setting the data on Toolbar
+     */
+    fun updateToolbar(fragmentType: FragmentType, navigationType: NavigationType, title: String, menu: Int) = getMainActivity().setData(fragmentType, navigationType, title, menu)
 }

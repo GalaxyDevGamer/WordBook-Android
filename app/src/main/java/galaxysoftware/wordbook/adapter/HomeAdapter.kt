@@ -22,25 +22,8 @@ class HomeAdapter(private val listener: WordSelectedListener, private val callba
     private var data: RealmResults<Words> = Realm.getDefaultInstance().where(Words::class.java).findAll()
 
     init {
-        if (data.count() == 0) {
-            FirebaseFirestore.getInstance().collection("words").get().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    for (document: DocumentSnapshot in it.result) {
-                        val local = Words()
-                        local.word = document.data!!["word"].toString()
-                        local.word = document.data!!["word"].toString()
-                        local.mean = document.data!!["mean"].toString()
-                        local.note = document.data!!["description"].toString()
-                        local.eiken = document.data!!["eiken"].toString()
-                        local.TOEIC = document.data!!["TOEIC"].toString().toInt()
-                        local.schoolLevel = document.data!!["schoolLevel"].toString()
-                        Realm.getDefaultInstance().executeTransaction {
-                            it.insertOrUpdate(local)
-                        }
-                    }
-                }
-                notifyDataSetChanged()
-            }
+        if (data.size == 0) {
+            update()
         }
     }
 
@@ -74,13 +57,14 @@ class HomeAdapter(private val listener: WordSelectedListener, private val callba
                         it.insertOrUpdate(data)
                     }
                 }
+                data = Realm.getDefaultInstance().where(Words::class.java).findAll()
                 notifyDataSetChanged()
             }
             callback.onRefreshComplete()
         }
     }
 
-    override fun getItemCount(): Int = data.size
+    override fun getItemCount() = data.size
 
     inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val wordView: TextView = mView.wordView

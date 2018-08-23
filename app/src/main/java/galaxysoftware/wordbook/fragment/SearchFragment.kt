@@ -17,7 +17,6 @@ class SearchFragment : BaseFragment(), WordSelectedListener {
             layoutManager = LinearLayoutManager(context)
             adapter = resultAdapter
         }
-        setHasOptionsMenu(true)
     }
 
     override fun getLayoutId() = R.layout.fragment_search
@@ -26,12 +25,8 @@ class SearchFragment : BaseFragment(), WordSelectedListener {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateToolbar(NavigationType.NONE, getString(R.string.search), R.menu.search)
-    }
-
     override fun onClick(word: String) {
+        updateToolbar(FragmentType.VIEW, NavigationType.BACK, word, R.menu.view)
         requestChangeFragment(FragmentType.VIEW, word)
     }
 

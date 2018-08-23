@@ -27,7 +27,6 @@ class WordViewFragment : BaseFragment() {
         TOEICField.text = data?.TOEIC.toString()
         schoolField.text = data?.schoolLevel
         descriptionFiled.text = data?.note
-        setHasOptionsMenu(true)
     }
 
     override fun getLayoutId() = R.layout.fragment_wordview
@@ -36,19 +35,17 @@ class WordViewFragment : BaseFragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateToolbar(NavigationType.BACK, arg!!, R.menu.view)
-    }
     private var arg: String? = null
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        updateToolbar(FragmentType.EDIT, NavigationType.BACK, "", R.menu.editer)
         requestChangeFragment(FragmentType.EDIT, wordField.text)
         return super.onOptionsItemSelected(item)
     }
 
     companion object {
         var BUNDLE_KEY_OBJECT = "bundle_key_object"
+
         @JvmStatic
         fun newInstance(any: Any) =
                 WordViewFragment().apply {

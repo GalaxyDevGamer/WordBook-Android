@@ -20,7 +20,6 @@ class HomeFragment : BaseFragment(), WordSelectedListener, SwipeCallback {
             layoutManager = LinearLayoutManager(context)
             adapter = homeAdapter
         }
-        setHasOptionsMenu(true)
         swipeRefresh.setOnRefreshListener {
             homeAdapter.update()
         }
@@ -33,19 +32,18 @@ class HomeFragment : BaseFragment(), WordSelectedListener, SwipeCallback {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateToolbar(NavigationType.NONE, getString(R.string.home), R.menu.home)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.add -> requestChangeFragment(FragmentType.EDIT, "")
+            R.id.add -> {
+                updateToolbar(FragmentType.EDIT, NavigationType.BACK, "", R.menu.editer)
+                requestChangeFragment(FragmentType.EDIT, "")
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onClick(word: String) {
+        updateToolbar(FragmentType.VIEW, NavigationType.BACK, word, R.menu.view)
         requestChangeFragment(FragmentType.VIEW, word)
     }
 
@@ -54,6 +52,7 @@ class HomeFragment : BaseFragment(), WordSelectedListener, SwipeCallback {
     }
 
     companion object {
+
         @JvmStatic
         fun newInstance() = HomeFragment()
     }
