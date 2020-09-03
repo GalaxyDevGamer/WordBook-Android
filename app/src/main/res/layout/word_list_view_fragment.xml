@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:context=".fragment.WordListViewFragment">
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wordList"
         android:name="galaxysoftware.wordbook.wordFragment"
         android:layout_width="match_parent"
@@ -16,6 +15,5 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".fragment.HomeFragment"
-        tools:listitem="@layout/fragment_word" />
-</android.support.v4.widget.SwipeRefreshLayout>
+        tools:listitem="@layout/wordcell_fragment" />
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

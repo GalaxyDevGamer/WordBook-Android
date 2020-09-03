@@ -12,7 +12,10 @@
     <string name="schoolLevel">学校レベル</string>
     <string name="description">Description</string>
     <string name="home">Home</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dictionaries">Dictionaries</string>
+    <string name="wordToStudy">Word to study</string>
+    <string name="recents">Recents</string>
+    <string name="history">History</string>
+    <string name="quickTest">Quick Test</string>
+    <string name="checkUnderstanding">Check Understanding</string>
 </resources>

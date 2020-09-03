@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.EditorFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/wordField"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#FFFFFF"
+            android:hint="@string/word"
+            android:textSize="40sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/meanField"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#FFFFFF"
+                    android:inputType="text"
+                    android:hint="@string/mean" />
+
+                <ImageButton
+                    android:id="@+id/addMean"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="#FFFFFF"
+                    android:src="@mipmap/baseline_add_black_24"
+                    android:contentDescription="@string/add"/>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/meanList"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/textcell_fragment" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/descriptionFiled"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"
+                android:gravity="start"
+                android:hint="@string/description" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
+    </LinearLayout>
+
+</FrameLayout>

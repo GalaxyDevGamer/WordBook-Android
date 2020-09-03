@@ -1,15 +1,14 @@
 package galaxysoftware.wordbook.realm
 
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
-open class Words: RealmObject() {
+open class HistoryObject: RealmObject() {
     @PrimaryKey
-    var id: Int = 0
+    var docId: String? = null
+    var id: Int? = null
     var word: String? = null
-    var mean: String? = null
+    var means = RealmList<String>()
     var note: String? = null
-    var eiken: String? = null
-    var TOEIC: Int = 0
-    var schoolLevel: String ? = null
 }

@@ -1,78 +1,78 @@
 package galaxysoftware.wordbook.fragment
 
-import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.recyclerview.widget.LinearLayoutManager
 import galaxysoftware.wordbook.BaseFragment
 import galaxysoftware.wordbook.R
-import galaxysoftware.wordbook.realm.Words
-import galaxysoftware.wordbook.type.NavigationType
+import galaxysoftware.wordbook.adapter.AddMeanAdapter
+import galaxysoftware.wordbook.entity.request.BaseRequest
+import galaxysoftware.wordbook.realm.WordObject
 import io.realm.Realm
-import kotlinx.android.synthetic.main.fragment_editer.*
-import java.util.*
+import kotlinx.android.synthetic.main.editor_fragment.*
+import kotlin.collections.ArrayList
 
 /**
- * Use the [EditorFragment.newInstance] factory method to
+ * Use the [EditorFragment] factory method to
  * create an instance of this fragment.
  */
 class EditorFragment : BaseFragment() {
 
-    private var word = ""
+    private var word: String? = null
+
+    private var means = ArrayList<String>()
+
+    private lateinit var adapter: AddMeanAdapter<String>
 
     override fun initialize() {
-        if (arguments != null) {
-            word = arguments?.getString(BUNDLE_KEY_OBJECT)!!
-            val data = Realm.getDefaultInstance().where(Words::class.java).equalTo("word", word).findFirst()
-            wordField.setText(data!!.word)
-            meanField.setText(data.mean)
-            eikenField.setText(data.eiken)
-            TOEICField.setText(data.TOEIC.toString())
-            schoolField.setText(data.schoolLevel)
-            descriptionFiled.setText(data.note)
+        word = arguments.let { EditorFragmentArgs.fromBundle(it!!).word }
+        if (word != null) {
+            Realm.getDefaultInstance().where(WordObject::class.java).equalTo("word", word).findFirst()?.apply {
+                wordField.setText(this.word)
+                this@EditorFragment.means.addAll(means)
+                descriptionFiled.setText(this.note)
+            }
         }
+        adapter = AddMeanAdapter(means)
+        meanList.apply {
+            layoutManager = LinearLayoutManager(this.context)
+            adapter = this@EditorFragment.adapter
+        }
+        addMean.setOnClickListener {
+            means.add(meanField.text.toString())
+            adapter.updateItems(means)
+        }
+        updateToolbar("")
     }
 
-    override fun getLayoutId() = R.layout.fragment_editer
+    override fun getLayoutId() = R.layout.editor_fragment
 
     override fun updateFragment() {
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val db = FirebaseFirestore.getInstance()
-        val data = HashMap<String, Any>()
-        data["word"] = wordField.text.toString()
-        data["mean"] = meanField.text.toString()
-        data["eiken"] = eikenField.text.toString()
-        data["TOEIC"] = TOEICField.text.toString().toInt()
-        data["schoolLevel"] = schoolField.text.toString()
-        data["description"] = descriptionFiled.text.toString()
-        db.collection("words").document(wordField.text.toString()).set(data).addOnCompleteListener {
-            if (it.isSuccessful) {
-                val word = Words()
-                word.word = wordField.text.toString()
-                word.mean = meanField.text.toString()
-                word.eiken = eikenField.text.toString()
-                word.TOEIC = TOEICField.text.toString().toInt()
-                word.schoolLevel = schoolField.text.toString()
-                word.note = descriptionFiled.text.toString()
-                Realm.getDefaultInstance().executeTransaction {
-                    it.insertOrUpdate(word)
-                }
-            }
-            backFragment()
-        }
-        return super.onOptionsItemSelected(item)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.editor, menu)
     }
 
-    companion object {
-        private const val BUNDLE_KEY_OBJECT = "bundle_key_object"
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.add) {
+            if (word == null)
+                BaseRequest.instance.add(0, wordField.text.toString(), means, descriptionFiled.text.toString()) { success, msg ->
+                    if (success) {
 
-        @JvmStatic
-        fun newInstance(any: Any) = EditorFragment().apply {
-            arguments = Bundle().apply {
-                putString(BUNDLE_KEY_OBJECT, any as String)
-            }
+                    } else {
+
+                    }
+                }
+            else
+                BaseRequest.instance.update(wordField.text.toString(), means, descriptionFiled.text.toString()) { success, msg ->
+
+                }
+            return super.onOptionsItemSelected(item)
         }
+        return true
     }
 }

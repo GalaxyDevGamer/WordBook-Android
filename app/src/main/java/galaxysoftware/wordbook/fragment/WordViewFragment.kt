@@ -1,32 +1,28 @@
 package galaxysoftware.wordbook.fragment
 
-import android.os.Bundle
 import android.view.MenuItem
+import androidx.navigation.fragment.findNavController
 import galaxysoftware.wordbook.BaseFragment
 import galaxysoftware.wordbook.R
-import galaxysoftware.wordbook.realm.Words
-import galaxysoftware.wordbook.type.FragmentType
-import galaxysoftware.wordbook.type.NavigationType
+import galaxysoftware.wordbook.realm.WordObject
 import io.realm.Realm
 import kotlinx.android.synthetic.main.fragment_wordview.*
 
 /**
- * Use the [WordViewFragment.newInstance] factory method to
+ * Use the [WordViewFragment] factory method to
  * create an instance of this fragment.
  */
 class WordViewFragment : BaseFragment() {
 
+    lateinit var word: String
+
     override fun initialize() {
-        arguments?.let {
-            arg = it.getString(BUNDLE_KEY_OBJECT)
+        arguments?.let { word = WordViewFragmentArgs.fromBundle(it).word }
+        Realm.getDefaultInstance().where(WordObject::class.java).equalTo("word", word).findFirst()!!.apply {
+            wordField.text = this.word
+            meanField.text = this.means.joinToString(", ")
+            descriptionFiled.text = this.note
         }
-        val data = Realm.getDefaultInstance().where(Words::class.java).equalTo("word", arg).findFirst()
-        wordField.text = data?.word
-        meanField.text = data?.mean
-        eikenField.text = data?.eiken
-        TOEICField.text = data?.TOEIC.toString()
-        schoolField.text = data?.schoolLevel
-        descriptionFiled.text = data?.note
     }
 
     override fun getLayoutId() = R.layout.fragment_wordview
@@ -35,23 +31,8 @@ class WordViewFragment : BaseFragment() {
 
     }
 
-    private var arg: String? = null
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        updateToolbar(FragmentType.EDIT, NavigationType.BACK, "", R.menu.editer)
-        requestChangeFragment(FragmentType.EDIT, wordField.text)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        findNavController().navigate(WordViewFragmentDirections.actionWordViewFragmentToEditorFragment(word))
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        var BUNDLE_KEY_OBJECT = "bundle_key_object"
-
-        @JvmStatic
-        fun newInstance(any: Any) =
-                WordViewFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(BUNDLE_KEY_OBJECT, any as String)
-                    }
-                }
     }
 }

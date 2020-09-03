@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/homeTab">
+
+    <fragment
+        android:id="@+id/homeTab"
+        android:name="galaxysoftware.wordbook.fragment.HomeTabFragment"
+        android:label="home_tab_fragment"
+        tools:layout="@layout/home_tab_fragment" >
+        <action
+            android:id="@+id/action_homeTab_to_wordViewFragment"
+            app:destination="@id/wordViewFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/homeTab"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_homeTab_to_editorFragment"
+            app:destination="@id/editorFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/homeTab"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/dictionaryTab"
+        android:name="galaxysoftware.wordbook.fragment.DictionaryTabFragment"
+        android:label="dictionary_tab_fragment"
+        tools:layout="@layout/dictionary_tab_fragment" >
+        <action
+            android:id="@+id/action_dictionaryTab_to_wordListViewFragment"
+            app:destination="@id/wordListViewFragment"
+            app:enterAnim="@anim/nav_default_exit_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/dictionaryTab"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/wordToStudyTab"
+        android:name="galaxysoftware.wordbook.fragment.WordToStudyTabFragment"
+        android:label="fragment_word_to_study_tab"
+        tools:layout="@layout/fragment_word_to_study_tab" >
+        <action
+            android:id="@+id/action_wordToStudyTab_to_wordViewFragment"
+            app:destination="@id/wordViewFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/wordToStudyTab"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/recentTab"
+        android:name="galaxysoftware.wordbook.fragment.RecentTabFragment"
+        android:label="fragment_recent_tab"
+        tools:layout="@layout/fragment_recent_tab" >
+        <action
+            android:id="@+id/action_recentTab_to_wordViewFragment"
+            app:destination="@id/wordViewFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/recentTab"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/historyTab"
+        android:name="galaxysoftware.wordbook.fragment.HistoryTabFragment"
+        android:label="fragment_history_tab"
+        tools:layout="@layout/fragment_history_tab" >
+        <action
+            android:id="@+id/action_historyTab_to_wordViewFragment"
+            app:destination="@id/wordViewFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/historyTab"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/wordViewFragment"
+        android:name="galaxysoftware.wordbook.fragment.WordViewFragment"
+        android:label="fragment_wordview"
+        tools:layout="@layout/fragment_wordview" >
+        <argument
+            android:name="word"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editorFragment"
+        android:name="galaxysoftware.wordbook.fragment.EditorFragment"
+        android:label="fragment_editor"
+        tools:layout="@layout/editor_fragment" >
+        <argument
+            android:name="word"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/wordListViewFragment"
+        android:name="galaxysoftware.wordbook.fragment.WordListViewFragment"
+        android:label="word_list_view_fragment"
+        tools:layout="@layout/word_list_view_fragment" >
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_wordListViewFragment_to_wordViewFragment"
+            app:destination="@id/wordViewFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/wordListViewFragment"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:launchSingleTop="true" />
+    </fragment>
+</navigation>

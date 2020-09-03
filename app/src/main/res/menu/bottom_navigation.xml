@@ -4,13 +4,31 @@
 
     <item
         android:id="@+id/homeTab"
-        android:title="@string/home"
         android:icon="@mipmap/baseline_home_black_24"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/home"
+        app:showAsAction="always" />
 
     <item
-        android:id="@+id/searchTab"
-        android:title="@string/search"
-        android:icon="@mipmap/baseline_search_black_24"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/dictionaryTab"
+        android:icon="@mipmap/round_menu_book_black_24"
+        android:title="@string/dictionaries"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/wordToStudyTab"
+        android:icon="@mipmap/round_access_time_black_24"
+        android:title="@string/wordToStudy"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/recentTab"
+        android:icon="@mipmap/round_access_time_black_24"
+        android:title="@string/recents"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/historyTab"
+        android:icon="@mipmap/round_access_time_black_24"
+        android:title="@string/history"
+        app:showAsAction="always" />
 </menu>
